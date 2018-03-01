@@ -1,0 +1,39 @@
+# General
+TODOs.md
+RELEASE_NOTE*.md
+
+# Microsoft VS Code
+.vscode
+
+# JetBrains project files
+.idea
+
+# Python
+db.sqlite3
+geckodriver.log
+virtualenv
+__pycache__
+*.pyc
+
+# Vue.Js / Node
+.DS_Store
+node_modules
+*.log
+explorations
+dist/*.gz
+dist/*.map
+dist/vue.common.min.js
+test/e2e/reports
+test/e2e/screenshots
+coverage
+dist/*.js
+temp
+vuerc
+template
+packages/test
+packages/vue-server-renderer/basic.js
+packages/vue-server-renderer/build.js
+packages/vue-server-renderer/server-plugin.js
+packages/vue-server-renderer/client-plugin.js
+packages/vue-template-compiler/build.js
+
