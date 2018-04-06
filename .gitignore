@@ -14,6 +14,7 @@ geckodriver.log
 virtualenv
 __pycache__
 *.pyc
+fishkanban-backend/static
 
 # Vue.Js / Node
 .DS_Store

@@ -1,0 +1,30 @@
+definitions:
+  fishmodel.Fish:
+    title: Fish
+    type: object
+    properties:
+      id:
+        type: integer
+        minimum: 0
+        maximum: 9007199254740991
+      date_time:
+        type: string
+      type:
+        title: FishType
+        type: string
+        enum:
+          - TYPE_NONE
+          - SALMON
+          - TUNA
+      state:
+        title: FishState
+        type: string
+        enum:
+          - STATE_NONE
+          - NEW
+          - PROCESSING
+          - COMPLETED
+      tags:
+        type: string
+      details:
+        type: string

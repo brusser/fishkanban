@@ -1,0 +1,11 @@
+asgi-redis==1.4.3
+asgiref==2.2.0
+channels-redis==2.1.0
+Django==2.0.3
+django-cors-headers==2.1.0
+django-debug-toolbar==1.9.1
+django-rest-swagger==2.1.2
+djangorestframework==3.7.7
+djangorestframework-jwt==1.11.0
+djoser==1.1.5
+protobuf==3.5.2.post1

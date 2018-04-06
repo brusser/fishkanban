@@ -7,7 +7,7 @@
                         <strong>BackLog</strong>
                     </h1>
                     <div v-if="backlogFish && backlogFish.length">
-                        <div v-for="fish of backlogFish">
+                        <div v-for="fish of backlogFish" :key="fish.fishId">
                             <div v-cloak class="card">
                                 <header class="card-header">
                                     <p class="card-header-title">
@@ -15,7 +15,7 @@
                                     </p>
                                 </header>
                                 <div class="card-content">
-                                    <div v-for="(value, name) in fish.fishDetails">
+                                    <div v-for="(value, name) in fish.fishDetails" :key="value">
                                         <h5 class="title is-5">{{name}}: </h5>
                                         <h6 class="subtitle is-6">{{value}}</h6>
                                         <p></p>
@@ -28,7 +28,7 @@
                                         </button>
                                     </div>
                                     <div class="card-footer-item ">
-                                        <button type="button " v-clock v-on:click="deleteCard " class="button is-danger ">
+                                        <button type="button " v-cloak v-on:click="deleteCard " class="button is-danger ">
                                             <i class="fa fa-times-circle "></i>
                                         </button>
                                     </div>
@@ -50,7 +50,7 @@
                         <strong>Processing</strong>
                     </h1>
                     <div v-if="fish && fish.length ">
-                        <div v-for="f of fish ">
+                        <div v-for="f of fish" :key="f.fishId">
                             <div v-if="f.fishState=='PROCESSING' ">
                                 <div v-cloak class="card ">
                                     <div class="card-content ">
@@ -66,7 +66,7 @@
                                             </button>
                                         </div>
                                         <div class="card-footer-item ">
-                                            <button type="button " v-clock v-on:click="deleteCard " class="button is-danger ">
+                                            <button type="button " v-cloak v-on:click="deleteCard " class="button is-danger ">
                                                 <i class="fa fa-times-circle "></i>
                                             </button>
                                         </div>
@@ -89,7 +89,7 @@
                         <strong>Completed</strong>
                     </h1>
                     <div v-if="fish && fish.length ">
-                        <div v-for="f of fish ">
+                        <div v-for="f of fish" :key="f.fishId">
                             <div v-if="f.fishState=='COMPLETED' ">
                                 <div v-cloak class="card ">
                                     <div class="card-content ">
@@ -105,7 +105,7 @@
                                             </button>
                                         </div>
                                         <div class="card-footer-item ">
-                                            <button type="button " v-clock v-on:click="deleteCard " class="button is-danger ">
+                                            <button type="button " v-cloak v-on:click="deleteCard " class="button is-danger ">
                                                 <i class="fa fa-times-circle "></i>
                                             </button>
                                         </div>
@@ -190,6 +190,17 @@ export default {
     // } catch (e) {
     //   this.errors.push(e)
     // }
+  },
+  methods: {
+    editCard() {
+      // TODO
+    },
+    deleteCard() {
+      // TODO
+    },
+    moveCardRight() {
+      // TODD
+    }
   }
 }
 </script>

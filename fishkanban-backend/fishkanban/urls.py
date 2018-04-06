@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
 from rest_framework import routers
+from rest_framework_swagger.views import get_swagger_view
 # from rest_framework_jwt.views import obtain_jwt_token
 from fish import views
 
@@ -29,7 +31,13 @@ urlpatterns = [
     path('auth/', include('djoser.urls.jwt')),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('schema/', get_swagger_view(title='FishKanban REST API')),
     # path('api-auth/', include('rest_auth.urls')
     # path('api-token-auth/', obtain_jwt_token),
 ]
 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns

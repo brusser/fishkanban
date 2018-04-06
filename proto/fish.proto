@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package fishmodel;
+
+message Fish {
+    uint64 id = 1;
+    string date_time = 2;
+    FishType type = 3;
+    FishState state = 4;
+    string tags = 5;
+    string details = 6;
+
+    enum FishType {
+        TYPE_NONE = 0;
+        SALMON = 1;
+        TUNA = 2;
+    }
+    
+    enum FishState {
+        STATE_NONE = 0;
+        NEW = 1;
+        PROCESSING = 2;
+        COMPLETED = 3;
+    }
+}
+
+

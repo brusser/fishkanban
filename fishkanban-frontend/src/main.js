@@ -6,7 +6,15 @@ import router from './router'
 
 import config from './config'
 
+import fishmodel from './fish_pb'
+
 Vue.config.productionTip = false
+
+// window.wsScheme = window.location.protocol == "https:" ? "wss" : "ws";
+
+window.wsRoot = config.socket
+
+Vue.prototype.$fishmodel = fishmodel
 
 /* eslint-disable no-new */
 new Vue({

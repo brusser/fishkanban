@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
-import os, datetime
+import os, datetime, logging.config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,6 +24,55 @@ SECRET_KEY = 'xgej27@t4ag=!36tz7qo-q0=3b-)#^0kjj^akywkd8k*bkc)0f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+LOGLEVEL = os.environ.get('LOGLEVEL', 'info').upper()
+if DEBUG:
+    LOGLEVEL = 'DEBUG'
+
+LOGGING_CONFIG = None
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '%(asctime)s - %(levelname)-8s - %(name)-12s %(module)s %(process)d %(thread)d %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+        # Add Handler for Sentry for `warning` and above
+        # 'sentry': {
+            # 'level': 'WARNING',
+            # 'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        # },
+    },
+    'loggers': {
+        # root logger
+        '': {
+            'level': 'WARNING',
+            # 'handlers': ['console', 'sentry'],
+            'handlers': ['console'],
+        },
+        'fish': {
+            'level': LOGLEVEL,
+            # 'handlers': ['console', 'sentry'],
+            'handlers': ['console'],
+            # required to avoid double logging with root logger
+            'propagate': False,
+        },
+        'fishkanban': {
+            'level': LOGLEVEL,
+            # 'handlers': ['console', 'sentry'],
+            'handlers': ['console'],
+            # required to avoid double logging with root logger
+            'propagate': False,
+        },
+    },
+})
+
 
 ALLOWED_HOSTS = []
 
@@ -41,10 +90,14 @@ INSTALLED_APPS = [
     # Custom Apps
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger',
     'corsheaders',
     'djoser',
-
     'channels',
+
+    # DEBUG
+    'debug_toolbar',
+    # 'channels_panel', # Not Working for Channels 2.0
 
     'fish',
 ]
@@ -54,6 +107,8 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
 
     'corsheaders.middleware.CorsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -89,6 +144,8 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [("127.0.0.1", 6379)],
+            # "hosts": [('%s:%s' % (os.getenv('REDIS_MASTER_SERVICE_HOST', '127.0.0.1'),
+                        #    os.getenv('REDIS_MASTER_SERVICE_PORT', 6379)))],
         },
     },
 }
@@ -96,13 +153,28 @@ CHANNEL_LAYERS = {
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
+# When 'NODB' is enabled,we skip Database and Cache setup. This is useful
+# to test the rest of the Django deployment while boostrapping the application.
+if os.getenv('NODB'):
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    # TODO Need to pass in Postgres PW as a secret
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'fishkanban',
+            'USER': 'django_user',
+            # 'PASSWORD': DJANGO_PW, # ENV? Or Read from File TODO
+            'HOST': os.getenv('POSTGRES_SERVICE_HOST', '127.0.0.1'),
+            'PORT': os.getenv('POSTGRES_SERVICE_PORT', 5432)
+        }
+    }
 
 
 # Password validation
@@ -152,6 +224,9 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
 }
 
+LOGIN_URL = 'rest_framework:login'
+LOGOUT_URL = 'rest_framework:logout'
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -170,3 +245,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = 'static/'
+
+INTERNAL_IPS = {'127.0.0.1',}
+
+# DEBUG_TOOLBAR_PANELS = {
+    # 'channels_panel.panel.ChannelsDebugPanel', # Not Working for Channels 2.0
+# }

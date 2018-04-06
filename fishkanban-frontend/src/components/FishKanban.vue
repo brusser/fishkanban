@@ -41,32 +41,22 @@ export default {
     }
   },
   mounted() {
-    const ws = new WebSocket('ws://localhost:8000/notifications')
+    const ws = new WebSocket(window.wsRoot)
+
     ws.onmessage = this.receive
     this.ws = ws
   },
-  // sockets: {
-  // Fired when the socket connects.
-  //   connect() {
-  //     this.isConnected = true
-  //   },
-  //   // Fired when the socket disconnects.
-  //   disconnect() {
-  //     this.isConnected = false
-  //   },
-  //   // Fired when the server sends something on the "messageChannel" channel.
-  //   messageChannel(data) {
-  //     this.socketMessage = data
-  //   }
-  // },
   methods: {
     receive(msg) {
       const data = JSON.parse(msg.data)
       console.log(data)
+      console.log(this.$fishmodel.fromObject(data))
     },
     testSocket() {
       // Send the "test" action event to the server.
       this.ws.send(JSON.stringify({ action: 'test' }))
+      var fishData = new this.$fishmodel.Fish()
+      fishData.setId(9876)
     }
   }
 }
